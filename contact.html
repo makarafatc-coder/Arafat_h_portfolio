@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contact — Arafat Hossain</title>
+<meta name="description" content="Contact Arafat Hossain for design, web/app or CCTV technical work.">
 <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -14,10 +17,9 @@
 <header class="site-header" id="siteHeader">
   <div class="container header-inner">
     <a class="logo" href="index.html"><span class="logo-mark">AH</span><span class="logo-text">ARAFAT<span class="logo-dot">.</span></span></a>
-    <nav class="nav" id="primaryNav">
+    <nav class="nav" id="primaryNav" aria-label="Primary navigation">
       <ul class="nav-list">
         <li><a href="index.html" class="nav-link">Home</a></li>
-        <li><a href="market.html" class="nav-link" style="color:#f59e0b; font-weight:800;">Digital Market</a></li>
         <li class="has-drop">
           <button type="button" class="nav-link nav-drop-btn" aria-expanded="false" aria-controls="portfolioDrop">Portfolio <svg viewBox="0 0 24 24" aria-hidden="true" class="chev"><path d="M6 9l6 6 6-6"/></svg></button>
           <ul class="dropdown" id="portfolioDrop">
@@ -35,7 +37,7 @@
       </ul>
       <a class="btn btn-primary btn-sm nav-cta" href="contact.html">Hire Me</a>
     </nav>
-    <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="primaryNav"><span></span><span></span><span></span></button>
   </div>
 </header>
 
@@ -55,11 +57,25 @@
       <form class="service-card" id="contactForm" novalidate>
         <h3 style="margin-bottom:20px">Send a message</h3>
         <div id="formNotice" class="disclaimer" style="margin:0 0 20px;display:none"></div>
-        <label style="display:block;margin-bottom:16px"><span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Name *</span><input type="text" name="name" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit"></label>
-        <label style="display:block;margin-bottom:16px"><span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Email *</span><input type="email" name="email" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit"></label>
-        <label style="display:block;margin-bottom:16px"><span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Subject *</span><input type="text" name="subject" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit"></label>
-        <label style="display:block;margin-bottom:22px"><span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Message *</span><textarea name="message" rows="5" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit;resize:vertical"></textarea></label>
+
+        <label style="display:block;margin-bottom:16px">
+          <span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Name *</span>
+          <input type="text" name="name" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit">
+        </label>
+        <label style="display:block;margin-bottom:16px">
+          <span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Email *</span>
+          <input type="email" name="email" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit">
+        </label>
+        <label style="display:block;margin-bottom:16px">
+          <span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Subject *</span>
+          <input type="text" name="subject" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit">
+        </label>
+        <label style="display:block;margin-bottom:22px">
+          <span style="display:block;font-size:13.5px;font-weight:700;margin-bottom:6px">Message *</span>
+          <textarea name="message" rows="5" required style="width:100%;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;font:inherit;resize:vertical"></textarea>
+        </label>
         <button type="submit" class="btn btn-primary btn-block">Send Message</button>
+        <p style="font-size:12.5px;color:#6b7280;margin:12px 0 0">Your details are only used to reply to your message.</p>
       </form>
 
       <aside>
@@ -82,11 +98,27 @@
 </main>
 
 <footer class="site-footer">
-  <div class="container footer-bottom"><p>© <span data-year>2025</span> Arafat Hossain. All rights reserved.</p></div>
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="logo logo--footer" href="index.html"><span class="logo-mark">AH</span><span class="logo-text">ARAFAT<span class="logo-dot">.</span></span></a>
+      <p>Creative designer &amp; digital project enthusiast from Feni, Bangladesh.</p>
+      <ul class="social-list">
+        <li><a data-site="facebook" href="#" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1z"/></svg></a></li>
+        <li><a data-site="instagram" href="#" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a></li>
+        <li><a data-site="github" href="#" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9c0-1.1-.3-1.8-.9-2.3 3-.3 6.2-1.5 6.2-6.7 0-1.5-.5-2.7-1.4-3.6.1-.3.6-1.7-.1-3.5 0 0-1.2-.4-3.9 1.4a13 13 0 00-7 0C6.2 1.6 5 2 5 2c-.7 1.8-.2 3.2-.1 3.5-.9.9-1.4 2.1-1.4 3.6 0 5.2 3.2 6.4 6.2 6.7-.4.4-.7.9-.8 1.7V22"/></svg></a></li>
+        <li><a data-site="email" href="#" aria-label="Email"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a></li>
+      </ul>
+    </div>
+    <div class="footer-col"><h3>Explore</h3><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Me</a></li><li><a href="portfolio.html">Graphic Design</a></li><li><a href="projects.html">Web &amp; App</a></li><li><a href="cctv.html">CCTV &amp; Technical</a></li></ul></div>
+    <div class="footer-col"><h3>Design</h3><ul><li><a href="logo-branding.html">Logo &amp; Branding</a></li><li><a href="social-media.html">Social Media</a></li><li><a href="posters-banners.html">Posters &amp; Banners</a></li><li><a href="thumbnails.html">YouTube Thumbnails</a></li><li><a href="services.html">All Services</a></li></ul></div>
+    <div class="footer-col"><h3>Contact</h3><ul><li><a data-site="email" href="#">Email me</a></li><li><a data-site="whatsapp" href="#" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="contact.html">Contact form</a></li><li><span class="muted-text">Feni, Bangladesh</span></li></ul></div>
+  </div>
+  <div class="container footer-bottom">
+    <p>© <span data-year>2025</span> Arafat Hossain. All rights reserved.</p>
+    <p class="footer-note">Designs shown as “Concept” are demonstration pieces, not client work.</p>
+  </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/main.js"></script>
 <script>
@@ -95,14 +127,27 @@
   var notice = document.getElementById('formNotice');
   if (!form) return;
   var endpoint = (window.AH_DATA && window.AH_DATA.site && window.AH_DATA.site.formEndpoint) || '';
-  function show(msg, ok) { notice.textContent = msg; notice.style.display = 'block'; notice.style.color = ok ? '#059669' : '#b91c1c'; notice.style.borderLeftColor = ok ? '#059669' : '#b91c1c'; }
+
+  function show(msg, ok) {
+    notice.textContent = msg;
+    notice.style.display = 'block';
+    notice.style.color = ok ? '#059669' : '#b91c1c';
+    notice.style.borderLeftColor = ok ? '#059669' : '#b91c1c';
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!form.checkValidity()) { show('Please fill in all required fields correctly.', false); return; }
-    if (!endpoint) { show('Form endpoint is not configured yet.', false); return; }
-    var btn = form.querySelector('button[type="submit"]'); btn.disabled = true; btn.textContent = 'Sending…';
+    if (!endpoint) { show('Form endpoint is not configured yet. Please set formEndpoint in assets/js/data.js, or contact me by WhatsApp/email in the meantime.', false); return; }
+
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Sending…';
+
     fetch(endpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
-      .then(function (r) { if (r.ok) { form.reset(); show('Thanks — your message has been sent. I’ll reply as soon as I can.', true); } else { show('Something went wrong. Please try again, or use WhatsApp/email.', false); } })
+      .then(function (r) {
+        if (r.ok) { form.reset(); show('Thanks — your message has been sent. I’ll reply as soon as I can.', true); }
+        else { show('Something went wrong. Please try again, or use WhatsApp/email.', false); }
+      })
       .catch(function () { show('Network error. Please try again, or use WhatsApp/email.', false); })
       .finally(function () { btn.disabled = false; btn.textContent = 'Send Message'; });
   });

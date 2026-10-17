@@ -11,15 +11,19 @@
   .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
   .header h1 { margin: 0; color: #1a1d23; }
   .btn-logout { background: #ef4444; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+  
   .card { background: #fff; padding: 30px; border-radius: 14px; box-shadow: 0 4px 20px rgba(0,0,0,.05); margin-bottom: 30px; border: 1px solid #e5e7eb; }
   .card h3 { margin-top: 0; margin-bottom: 20px; color: #1a1d23; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; }
+  
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
   .form-group { margin-bottom: 15px; }
   .form-group label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 700; color: #4b5563; }
   .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; box-sizing: border-box; font-family: inherit; }
   .form-group textarea { height: 80px; resize: vertical; }
+  
   .btn-save { background: #10b981; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; }
   .btn-add { background: #2563eb; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; }
+  
   .project-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 15px 0; }
   .project-info { display: flex; align-items: center; gap: 15px; }
   .project-info img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
@@ -35,6 +39,7 @@
     <button class="btn-logout" id="logoutBtn">Logout</button>
   </div>
 
+  <!-- ১. প্রোফাইল এডিট -->
   <div class="card">
     <h3>Edit Profile Information</h3>
     <form id="profileForm">
@@ -49,22 +54,23 @@
     </form>
   </div>
 
+  <!-- ২. নতুন কাজ যোগ করার ফর্ম -->
   <div class="card">
-    <h3>Add New Project</h3>
+    <h3>Add New Project (Portfolio)</h3>
     <form id="addProjectForm">
       <div class="grid-2">
         <div class="form-group"><label>Project Title</label><input type="text" id="title" required></div>
-        <div class="form-group"><label>Category</label><input type="text" id="category" required></div>
+        <div class="form-group"><label>Category</label><input type="text" id="category" required placeholder="Logo, Poster, etc."></div>
       </div>
-      <div class="form-group"><label>Image URL</label><input type="text" id="image" required></div>
+      <div class="form-group"><label>Image URL</label><input type="text" id="image" required placeholder="assets/images/design/example.png"></div>
       <div class="form-group"><label>Description</label><textarea id="description" required></textarea></div>
       <button type="submit" class="btn-add" id="addBtn">Add Project</button>
     </form>
   </div>
 
-  <!-- নতুন ডিজিটাল প্রোডাক্ট (Tag সহ) -->
+  <!-- ৩. ডিজিটাল প্রোডাক্ট যোগ করার ফর্ম -->
   <div class="card" style="border: 2px solid #f59e0b;">
-    <h3>Add Digital Product</h3>
+    <h3>Add Digital Product (Market)</h3>
     <form id="addProductForm">
       <div class="grid-2">
         <div class="form-group"><label>Product Name</label><input type="text" id="pTitle" required placeholder="e.g. Social Media Pack"></div>
@@ -79,21 +85,25 @@
     </form>
   </div>
 
+  <!-- ৪. লিস্ট দেখার জায়গা -->
   <div class="card"><h3>Your Projects</h3><div id="projectList">Loading...</div></div>
   <div class="card"><h3>Your Digital Products</h3><div id="productList">Loading...</div></div>
 </div>
 
 <script src="assets/js/supabase-client.js"></script>
 <script>
+  // লগইন চেক
   supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (!session) window.location.href = 'login.html';
     else { loadProfile(); loadProjects(); loadProducts(); }
   });
 
+  // লগআউট
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     await supabaseClient.auth.signOut(); window.location.href = 'login.html';
   });
 
+  // প্রোফাইল লোড
   async function loadProfile() {
     const { data } = await supabaseClient.from('profile').select('*').eq('id', 1).single();
     if (data) {
@@ -105,6 +115,7 @@
     }
   }
 
+  // প্রোফাইল আপডেট
   document.getElementById('profileForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('saveProfileBtn'); btn.textContent = 'Saving...';
@@ -114,6 +125,7 @@
     btn.textContent = 'Update Profile';
   });
 
+  // প্রজেক্ট অ্যাড
   document.getElementById('addProjectForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('addBtn'); btn.textContent = 'Saving...';
@@ -124,6 +136,7 @@
     btn.textContent = 'Add Project';
   });
 
+  // প্রজেক্ট লোড
   async function loadProjects() {
     const { data: projects } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
     const listDiv = document.getElementById('projectList');
@@ -136,6 +149,7 @@
   }
   window.deleteProject = async (id) => { if (confirm('Are you sure?')) { await supabaseClient.from('projects').delete().eq('id', id); loadProjects(); } };
 
+  // প্রোডাক্ট অ্যাড
   document.getElementById('addProductForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('addProductBtn'); btn.textContent = 'Saving...';
@@ -146,6 +160,7 @@
     btn.textContent = 'Add Product';
   });
 
+  // প্রোডাক্ট লোড
   async function loadProducts() {
     const { data: products } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
     const listDiv = document.getElementById('productList');
