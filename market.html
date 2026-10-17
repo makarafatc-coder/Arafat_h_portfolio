@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Digital Market — Arafat Hossain</title>
+<link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<style>
+  .market-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .market-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: .2s; position: relative; }
+  .market-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,.1); }
+  .market-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-bottom: 1px solid var(--line); }
+  .market-body { padding: 20px; }
+  .market-tag { position: absolute; top: 15px; left: 15px; background: #f59e0b; color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; z-index: 2; }
+  .market-body h3 { font-size: 18px; margin-bottom: 6px; }
+  .market-body p { font-size: 14px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+  .price { font-size: 22px; font-weight: 800; color: #d97706; margin-bottom: 16px; display: block; }
+  .btn-bkash { background: #e2136e; color: #fff; border: none; padding: 14px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; font-size: 16px; display: flex; justify-content: center; align-items: center; gap: 10px; transition: 0.2s; }
+  .btn-bkash:hover { background: #be185d; transform: scale(1.02); }
+  .modal { position: fixed; inset: 0; background: rgba(0,0,0,.7); display: none; place-items: center; z-index: 1000; backdrop-filter: blur(4px); padding: 20px; }
+  .modal.is-open { display: grid; }
+  .modal-content { background: #fff; width: 100%; max-width: 450px; padding: 30px; border-radius: 20px; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+  .modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; background: none; border: none; color: #666; }
+  .bkash-box { background: #fdf2f8; padding: 15px; border-radius: 10px; border: 2px dashed #e2136e; margin-bottom: 20px; text-align: center; }
+  .bkash-box strong { font-size: 24px; color: #be185d; display: block; margin-top: 5px; letter-spacing: 1px; }
+  @media(max-width: 768px) { .market-grid { grid-template-columns: 1fr; } }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a class="logo" href="index.html"><span class="logo-mark">AH</span><span class="logo-text">ARAFAT<span class="logo-dot">.</span></span></a>
+    <nav class="nav" id="primaryNav">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="market.html" class="nav-link" style="color:#f59e0b; font-weight:800;">Digital Market</a></li>
+        <li><a href="projects.html" class="nav-link">Web &amp; App</a></li>
+        <li><a href="cctv.html" class="nav-link">CCTV</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="about.html" class="nav-link">About</a></li>
+      </ul>
+      <a class="btn btn-primary btn-sm nav-cta" href="contact.html">Hire Me</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-head">
+        <p class="kicker" style="color:#f59e0b;">Digital Products</p>
+        <h1 class="section-title">Buy Premium Design Templates</h1>
+        <p class="section-sub">Instantly buy ready-to-use design packs. Pay securely via bKash and receive files via email.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light">
+    <div class="container">
+      <div class="market-grid" id="marketGrid"><p>Loading products...</p></div>
+    </div>
+  </section>
+</main>
+
+<div class="modal" id="paymentModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h3 style="margin-top:0; color:#1a1d23;">Complete Your Purchase</h3>
+    <p id="modalProductName" style="font-weight:700; color:#e2136e; font-size:18px;"></p>
+    
+    <div class="bkash-box">
+      <p style="margin:0; font-size:14px; font-weight:bold; color:#333;">bKash Personal Number</p>
+      <strong>01408680593</strong>
+      <p style="margin:5px 0 0; font-size:15px; font-weight:bold;">Amount: ৳ <span id="modalPrice">0</span></p>
+    </div>
+
+    <form id="paymentForm">
+      <input type="hidden" name="product" id="inputProduct">
+      <input type="hidden" name="amount" id="inputAmount">
+      
+      <div style="margin-bottom:12px;">
+        <label style="font-size:13px; font-weight:700; color:#4b5563;">Your Name *</label>
+        <input type="text" name="name" required style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px; margin-top:5px;">
+      </div>
+      <div style="margin-bottom:12px;">
+        <label style="font-size:13px; font-weight:700; color:#4b5563;">Your Email (for files) *</label>
+        <input type="email" name="email" required style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px; margin-top:5px;">
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="font-size:13px; font-weight:700; color:#4b5563;">bKash Transaction ID (TrxID) *</label>
+        <input type="text" name="trxid" required placeholder="e.g. 9F7A2B1C" style="width:100%;padding:12px;border:1px solid #ccc;border-radius:8px; margin-top:5px;">
+      </div>
+      
+      <button type="submit" class="btn-bkash">Verify Payment & Order Now</button>
+      <div id="payNotice" style="margin-top:15px; font-size:14px; text-align:center; display:none; padding:10px; border-radius:8px;"></div>
+    </form>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-bottom"><p>© <span data-year>2025</span> Arafat Hossain. All rights reserved.</p></div>
+</footer>
+
+<script src="assets/js/supabase-client.js"></script>
+<script src="assets/js/data.js"></script>
+<script>
+  supabaseClient.from('products').select('*').order('created_at', { ascending: false }).then(({ data: products, error }) => {
+    const grid = document.getElementById('marketGrid');
+    if (!products || products.length === 0) {
+      grid.innerHTML = '<p style="text-align:center; width:100%;">No products available right now.</p>';
+      return;
+    }
+    grid.innerHTML = products.map(p => `
+      <article class="market-card">
+        <span class="market-tag">${p.tag || 'Design'}</span>
+        <img src="${p.image}" onerror="this.src='https://via.placeholder.com/400x300?text=Design'">
+        <div class="market-body">
+          <h3>${p.title}</h3>
+          <p>${p.description}</p>
+          <span class="price">৳ ${p.price}</span>
+          <button class="btn-bkash" onclick="openModal('${p.title}', ${p.price})">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            Buy with bKash
+          </button>
+        </div>
+      </article>
+    `).join('');
+  });
+
+  var modal = document.getElementById('paymentModal');
+  var form = document.getElementById('paymentForm');
+  var notice = document.getElementById('payNotice');
+
+  function openModal(product, price) {
+    document.getElementById('modalProductName').textContent = product;
+    document.getElementById('modalPrice').textContent = price;
+    document.getElementById('inputProduct').value = product;
+    document.getElementById('inputAmount').value = price;
+    modal.classList.add('is-open');
+    notice.style.display = 'none';
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    form.reset();
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true; btn.textContent = 'Verifying...';
+
+    var endpoint = (window.AH_DATA && window.AH_DATA.site && window.AH_DATA.site.formEndpoint) || '';
+
+    fetch(endpoint, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
+      .then(r => {
+        if (r.ok) {
+          notice.innerHTML = '✅ <b>Success!</b> Payment verified. We will email your files shortly.';
+          notice.style.background = '#dcfce7'; notice.style.color = '#166534'; notice.style.display = 'block';
+          btn.textContent = 'Order Successful';
+          setTimeout(closeModal, 4000);
+        } else throw new Error();
+      })
+      .catch(() => {
+        notice.innerHTML = '❌ <b>Error.</b> Please try again or contact on WhatsApp.';
+        notice.style.background = '#fee2e2'; notice.style.color = '#991b1b'; notice.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Verify Payment & Order Now';
+      });
+  });
+</script>
+</body>
+</html>
