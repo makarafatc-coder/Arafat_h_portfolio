@@ -27,7 +27,11 @@
   .project-item { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding: 15px 0; }
   .project-info { display: flex; align-items: center; gap: 15px; }
   .project-info img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; }
+  .project-actions { display: flex; gap: 10px; }
+  .btn-edit { background: #f59e0b; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
   .btn-delete { background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  
+  .file-input-wrapper { padding: 10px; border: 1px dashed #cbd5e1; border-radius: 8px; background: #f8fafc; margin-bottom: 10px; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -47,63 +51,99 @@
         <div class="form-group"><label>Name</label><input type="text" id="pName" required></div>
         <div class="form-group"><label>Role / Title</label><input type="text" id="pRole" required></div>
       </div>
-      <div class="form-group"><label>Hero Profile Photo URL</label><input type="text" id="pProfilePhoto" required placeholder="assets/images/profile/arafat-hero.png"></div>
-      <div class="form-group"><label>About Section Photo URL</label><input type="text" id="pAboutPhoto" required placeholder="assets/images/profile/arafat-about.png"></div>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Hero Profile Photo</label>
+          <input type="file" id="pProfileFile" accept="image/*" class="file-input-wrapper">
+          <input type="text" id="pProfilePhoto" placeholder="Or paste Image URL here">
+        </div>
+        <div class="form-group">
+          <label>About Section Photo</label>
+          <input type="file" id="pAboutFile" accept="image/*" class="file-input-wrapper">
+          <input type="text" id="pAboutPhoto" placeholder="Or paste Image URL here">
+        </div>
+      </div>
+      
       <div class="form-group"><label>Short Bio</label><textarea id="pBio" required></textarea></div>
       <button type="submit" class="btn-save" id="saveProfileBtn">Update Profile</button>
     </form>
   </div>
 
-  <!-- ২. নতুন কাজ যোগ করার ফর্ম -->
+  <!-- ২. প্রজেক্ট অ্যাড / এডিট -->
   <div class="card">
-    <h3>Add New Project (Portfolio)</h3>
-    <form id="addProjectForm">
+    <h3 id="projectFormTitle">Add New Project (Portfolio)</h3>
+    <form id="projectForm">
+      <input type="hidden" id="editProjectId">
       <div class="grid-2">
         <div class="form-group"><label>Project Title</label><input type="text" id="title" required></div>
         <div class="form-group"><label>Category</label><input type="text" id="category" required placeholder="Logo, Poster, etc."></div>
       </div>
-      <div class="form-group"><label>Image URL</label><input type="text" id="image" required placeholder="assets/images/design/example.png"></div>
+      <div class="form-group">
+        <label>Project Image</label>
+        <input type="file" id="projectFile" accept="image/*" class="file-input-wrapper">
+        <input type="text" id="image" placeholder="Or paste Image URL here">
+      </div>
       <div class="form-group"><label>Description</label><textarea id="description" required></textarea></div>
-      <button type="submit" class="btn-add" id="addBtn">Add Project</button>
+      <button type="submit" class="btn-add" id="submitProjectBtn">Add Project</button>
+      <button type="button" id="cancelEditProject" class="btn-ghost" style="display:none; width:100%; margin-top:10px; padding:10px; background:#e5e7eb; border-radius:8px; cursor:pointer;">Cancel Edit</button>
     </form>
   </div>
 
-  <!-- ৩. ডিজিটাল প্রোডাক্ট যোগ করার ফর্ম -->
+  <!-- ৩. প্রোডাক্ট অ্যাড / এডিট (ডিসকাউন্ট সহ) -->
   <div class="card" style="border: 2px solid #f59e0b;">
-    <h3>Add Digital Product (Market)</h3>
-    <form id="addProductForm">
+    <h3 id="productFormTitle">Add Digital Product (Market)</h3>
+    <form id="productForm">
+      <input type="hidden" id="editProductId">
       <div class="grid-2">
-        <div class="form-group"><label>Product Name</label><input type="text" id="pTitle" required placeholder="e.g. Social Media Pack"></div>
-        <div class="form-group"><label>Price (BDT)</label><input type="number" id="pPrice" required placeholder="e.g. 500"></div>
+        <div class="form-group"><label>Product Name</label><input type="text" id="pTitle" required></div>
+        <div class="form-group"><label>Price (BDT)</label><input type="number" id="pPrice" required></div>
       </div>
       <div class="grid-2">
-        <div class="form-group"><label>Tag (e.g. PSD, Vector)</label><input type="text" id="pTag" required placeholder="PSD File"></div>
-        <div class="form-group"><label>Image URL</label><input type="text" id="pImage" required placeholder="assets/images/design/example.png"></div>
+        <div class="form-group"><label>Discount (BDT) - 0 if none</label><input type="number" id="pDiscount" value="0" required></div>
+        <div class="form-group"><label>Tag (e.g. PSD, Vector)</label><input type="text" id="pTag" required></div>
       </div>
-      <div class="form-group"><label>Description</label><textarea id="pDesc" required placeholder="What's included in this pack?"></textarea></div>
-      <button type="submit" class="btn-save" style="background:#f59e0b;" id="addProductBtn">Add Product</button>
+      <div class="form-group">
+        <label>Product Image</label>
+        <input type="file" id="productFile" accept="image/*" class="file-input-wrapper">
+        <input type="text" id="pImage" placeholder="Or paste Image URL here">
+      </div>
+      <div class="form-group"><label>Description</label><textarea id="pDesc" required></textarea></div>
+      <button type="submit" class="btn-save" style="background:#f59e0b;" id="submitProductBtn">Add Product</button>
+      <button type="button" id="cancelEditProduct" style="display:none; width:100%; margin-top:10px; padding:10px; background:#e5e7eb; border-radius:8px; cursor:pointer;">Cancel Edit</button>
     </form>
   </div>
 
-  <!-- ৪. লিস্ট দেখার জায়গা -->
   <div class="card"><h3>Your Projects</h3><div id="projectList">Loading...</div></div>
   <div class="card"><h3>Your Digital Products</h3><div id="productList">Loading...</div></div>
 </div>
 
 <script src="assets/js/supabase-client.js"></script>
 <script>
-  // লগইন চেক
+  let allProjects = [];
+  let allProducts = [];
+
   supabaseClient.auth.getSession().then(({ data: { session } }) => {
     if (!session) window.location.href = 'login.html';
     else { loadProfile(); loadProjects(); loadProducts(); }
   });
 
-  // লগআউট
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     await supabaseClient.auth.signOut(); window.location.href = 'login.html';
   });
 
-  // প্রোফাইল লোড
+  // ---------- ইমেজ আপলোড হেল্পার ফাংশন ----------
+  async function uploadImage(file) {
+    if (!file) return null;
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const { error } = await supabaseClient.storage.from('portfolio-images').upload(fileName, file);
+    if (error) { alert("Image upload failed: " + error.message); return null; }
+    const { data } = supabaseClient.storage.from('portfolio-images').getPublicUrl(fileName);
+    return data.publicUrl;
+  }
+
+  // ---------- প্রোফাইল ----------
   async function loadProfile() {
     const { data } = await supabaseClient.from('profile').select('*').eq('id', 1).single();
     if (data) {
@@ -115,63 +155,206 @@
     }
   }
 
-  // প্রোফাইল আপডেট
   document.getElementById('profileForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('saveProfileBtn'); btn.textContent = 'Saving...';
-    const updates = { name: document.getElementById('pName').value, role: document.getElementById('pRole').value, profile_photo: document.getElementById('pProfilePhoto').value, about_photo: document.getElementById('pAboutPhoto').value, bio: document.getElementById('pBio').value };
+    
+    // ছবি আপলোড (যদি ফাইল সিলেক্ট করা থাকে)
+    const profileFile = document.getElementById('pProfileFile').files[0];
+    const aboutFile = document.getElementById('pAboutFile').files[0];
+    
+    let profileUrl = document.getElementById('pProfilePhoto').value;
+    let aboutUrl = document.getElementById('pAboutPhoto').value;
+
+    if (profileFile) profileUrl = await uploadImage(profileFile);
+    if (aboutFile) aboutUrl = await uploadImage(aboutFile);
+
+    const updates = { 
+      name: document.getElementById('pName').value, 
+      role: document.getElementById('pRole').value, 
+      profile_photo: profileUrl, 
+      about_photo: aboutUrl, 
+      bio: document.getElementById('pBio').value 
+    };
+    
     const { error } = await supabaseClient.from('profile').update(updates).eq('id', 1);
     alert(error ? 'Error: ' + error.message : 'Profile updated successfully!');
     btn.textContent = 'Update Profile';
   });
 
-  // প্রজেক্ট অ্যাড
-  document.getElementById('addProjectForm').addEventListener('submit', async (e) => {
+  // ---------- প্রজেক্ট ----------
+  document.getElementById('projectForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('addBtn'); btn.textContent = 'Saving...';
-    const newProject = { title: document.getElementById('title').value, image: document.getElementById('image').value, category: document.getElementById('category').value, description: document.getElementById('description').value };
-    const { error } = await supabaseClient.from('projects').insert([newProject]);
+    const btn = document.getElementById('submitProjectBtn'); btn.textContent = 'Saving...';
+    const editId = document.getElementById('editProjectId').value;
+    
+    const file = document.getElementById('projectFile').files[0];
+    let imageUrl = document.getElementById('image').value;
+    if (file) imageUrl = await uploadImage(file);
+    if (!imageUrl) return alert('Please select an image file or paste a URL');
+
+    const projectData = { 
+      title: document.getElementById('title').value, 
+      image: imageUrl, 
+      category: document.getElementById('category').value, 
+      description: document.getElementById('description').value 
+    };
+
+    let error;
+    if (editId) {
+      // আপডেট
+      const res = await supabaseClient.from('projects').update(projectData).eq('id', editId);
+      error = res.error;
+    } else {
+      // নতুন অ্যাড
+      const res = await supabaseClient.from('projects').insert([projectData]);
+      error = res.error;
+    }
+
     if (error) alert('Error: ' + error.message);
-    else { document.getElementById('addProjectForm').reset(); loadProjects(); }
+    else { resetProjectForm(); loadProjects(); }
     btn.textContent = 'Add Project';
   });
 
-  // প্রজেক্ট লোড
+  function resetProjectForm() {
+    document.getElementById('projectForm').reset();
+    document.getElementById('editProjectId').value = '';
+    document.getElementById('projectFormTitle').textContent = 'Add New Project (Portfolio)';
+    document.getElementById('submitProjectBtn').textContent = 'Add Project';
+    document.getElementById('cancelEditProject').style.display = 'none';
+  }
+  document.getElementById('cancelEditProject').addEventListener('click', resetProjectForm);
+
   async function loadProjects() {
-    const { data: projects } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
+    const { data } = await supabaseClient.from('projects').select('*').order('created_at', { ascending: false });
+    allProjects = data || [];
     const listDiv = document.getElementById('projectList');
-    if (!projects || projects.length === 0) { listDiv.innerHTML = '<p>No projects found.</p>'; return; }
-    listDiv.innerHTML = projects.map(p => `
+    if (allProjects.length === 0) { listDiv.innerHTML = '<p>No projects found.</p>'; return; }
+    
+    listDiv.innerHTML = allProjects.map(p => `
       <div class="project-item">
-        <div class="project-info"><img src="${p.image}" onerror="this.src='https://via.placeholder.com/50'"><div><h4 style="margin:0">${p.title}</h4><p style="margin:0; font-size:12px; color:#666">${p.category}</p></div></div>
-        <button class="btn-delete" onclick="deleteProject('${p.id}')">Delete</button>
+        <div class="project-info">
+          <img src="${p.image}" onerror="this.src='https://via.placeholder.com/50'">
+          <div><h4 style="margin:0">${p.title}</h4><p style="margin:0; font-size:12px; color:#666">${p.category}</p></div>
+        </div>
+        <div class="project-actions">
+          <button class="btn-edit" onclick="editProject('${p.id}')">Edit</button>
+          <button class="btn-delete" onclick="deleteProject('${p.id}')">Delete</button>
+        </div>
       </div>`).join('');
   }
-  window.deleteProject = async (id) => { if (confirm('Are you sure?')) { await supabaseClient.from('projects').delete().eq('id', id); loadProjects(); } };
 
-  // প্রোডাক্ট অ্যাড
-  document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+  window.editProject = (id) => {
+    const p = allProjects.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('editProjectId').value = p.id;
+    document.getElementById('title').value = p.title;
+    document.getElementById('category').value = p.category;
+    document.getElementById('image').value = p.image;
+    document.getElementById('description').value = p.description;
+    
+    document.getElementById('projectFormTitle').textContent = 'Edit Project';
+    document.getElementById('submitProjectBtn').textContent = 'Update Project';
+    document.getElementById('cancelEditProject').style.display = 'block';
+    window.scrollTo(0, document.getElementById('projectFormTitle').offsetTop - 50);
+  };
+
+  window.deleteProject = async (id) => {
+    if (confirm('Are you sure?')) { await supabaseClient.from('projects').delete().eq('id', id); loadProjects(); }
+  };
+
+  // ---------- প্রোডাক্ট ----------
+  document.getElementById('productForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const btn = document.getElementById('addProductBtn'); btn.textContent = 'Saving...';
-    const newProduct = { title: document.getElementById('pTitle').value, price: parseFloat(document.getElementById('pPrice').value), image: document.getElementById('pImage').value, description: document.getElementById('pDesc').value, tag: document.getElementById('pTag').value };
-    const { error } = await supabaseClient.from('products').insert([newProduct]);
+    const btn = document.getElementById('submitProductBtn'); btn.textContent = 'Saving...';
+    const editId = document.getElementById('editProductId').value;
+
+    const file = document.getElementById('productFile').files[0];
+    let imageUrl = document.getElementById('pImage').value;
+    if (file) imageUrl = await uploadImage(file);
+    if (!imageUrl) return alert('Please select an image file or paste a URL');
+
+    const productData = { 
+      title: document.getElementById('pTitle').value, 
+      price: parseFloat(document.getElementById('pPrice').value), 
+      discount: parseFloat(document.getElementById('pDiscount').value) || 0,
+      image: imageUrl, 
+      description: document.getElementById('pDesc').value, 
+      tag: document.getElementById('pTag').value 
+    };
+
+    let error;
+    if (editId) {
+      const res = await supabaseClient.from('products').update(productData).eq('id', editId);
+      error = res.error;
+    } else {
+      const res = await supabaseClient.from('products').insert([productData]);
+      error = res.error;
+    }
+
     if (error) alert('Error: ' + error.message);
-    else { document.getElementById('addProductForm').reset(); loadProducts(); }
+    else { resetProductForm(); loadProducts(); }
     btn.textContent = 'Add Product';
   });
 
-  // প্রোডাক্ট লোড
-  async function loadProducts() {
-    const { data: products } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
-    const listDiv = document.getElementById('productList');
-    if (!products || products.length === 0) { listDiv.innerHTML = '<p>No products found.</p>'; return; }
-    listDiv.innerHTML = products.map(p => `
-      <div class="project-item">
-        <div class="project-info"><img src="${p.image}" onerror="this.src='https://via.placeholder.com/50'"><div><h4 style="margin:0">${p.title}</h4><p style="margin:0; font-size:12px; color:#f59e0b; font-weight:bold;">৳ ${p.price} | ${p.tag}</p></div></div>
-        <button class="btn-delete" onclick="deleteProduct('${p.id}')">Delete</button>
-      </div>`).join('');
+  function resetProductForm() {
+    document.getElementById('productForm').reset();
+    document.getElementById('editProductId').value = '';
+    document.getElementById('pDiscount').value = '0';
+    document.getElementById('productFormTitle').textContent = 'Add Digital Product (Market)';
+    document.getElementById('submitProductBtn').textContent = 'Add Product';
+    document.getElementById('cancelEditProduct').style.display = 'none';
   }
-  window.deleteProduct = async (id) => { if (confirm('Delete this product?')) { await supabaseClient.from('products').delete().eq('id', id); loadProducts(); } };
+  document.getElementById('cancelEditProduct').addEventListener('click', resetProductForm);
+
+  async function loadProducts() {
+    const { data } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+    allProducts = data || [];
+    const listDiv = document.getElementById('productList');
+    if (allProducts.length === 0) { listDiv.innerHTML = '<p>No products found.</p>'; return; }
+    
+    listDiv.innerHTML = allProducts.map(p => {
+      let priceHtml = `৳ ${p.price}`;
+      if (p.discount > 0) {
+        priceHtml = `<span style="text-decoration:line-through;color:#999;font-size:11px;">৳ ${p.price}</span> ৳ ${p.price - p.discount}`;
+      }
+      return `
+      <div class="project-item">
+        <div class="project-info">
+          <img src="${p.image}" onerror="this.src='https://via.placeholder.com/50'">
+          <div>
+            <h4 style="margin:0">${p.title}</h4>
+            <p style="margin:0; font-size:12px; color:#f59e0b; font-weight:bold;">${priceHtml} | ${p.tag}</p>
+          </div>
+        </div>
+        <div class="project-actions">
+          <button class="btn-edit" onclick="editProduct('${p.id}')">Edit</button>
+          <button class="btn-delete" onclick="deleteProduct('${p.id}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.editProduct = (id) => {
+    const p = allProducts.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById('editProductId').value = p.id;
+    document.getElementById('pTitle').value = p.title;
+    document.getElementById('pPrice').value = p.price;
+    document.getElementById('pDiscount').value = p.discount || 0;
+    document.getElementById('pTag').value = p.tag;
+    document.getElementById('pImage').value = p.image;
+    document.getElementById('pDesc').value = p.description;
+    
+    document.getElementById('productFormTitle').textContent = 'Edit Digital Product';
+    document.getElementById('submitProductBtn').textContent = 'Update Product';
+    document.getElementById('cancelEditProduct').style.display = 'block';
+    window.scrollTo(0, document.getElementById('productFormTitle').offsetTop - 50);
+  };
+
+  window.deleteProduct = async (id) => {
+    if (confirm('Delete this product?')) { await supabaseClient.from('products').delete().eq('id', id); loadProducts(); }
+  };
 </script>
 </body>
 </html>
