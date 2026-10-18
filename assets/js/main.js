@@ -1,10 +1,23 @@
 (function () {
   'use strict';
 
-  // ১. মোবাইল মেনু (৩ লাইন) ওপেন/ক্লোজ
+  // ১. থিম টগল (Light / Dark)
+  var themeToggle = document.getElementById('themeToggle');
+  var currentTheme = localStorage.getItem('theme') || 'light'; // ডিফল্ট Light Mode
+  document.documentElement.setAttribute('data-theme', currentTheme);
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', function () {
+      var theme = document.documentElement.getAttribute('data-theme');
+      var newTheme = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+  }
+
+  // ২. মোবাইল মেনু
   var navToggle = document.getElementById('navToggle');
   var nav = document.getElementById('primaryNav');
-  
   if (navToggle && nav) {
     navToggle.addEventListener('click', function () {
       var open = nav.classList.toggle('is-open');
@@ -12,7 +25,7 @@
     });
   }
 
-  // ২. Portfolio ড্রপডাউন (মোবাইলে)
+  // ৩. ড্রপডাউন
   document.querySelectorAll('.has-drop').forEach(function (drop) {
     var btn = drop.querySelector('.nav-drop-btn');
     if (btn) btn.addEventListener('click', function (e) {
@@ -21,7 +34,7 @@
     });
   });
 
-  // ৩. Supabase থেকে ডাটা লোড (নাম, বায়ো, ছবি)
+  // ৪. সোশ্যাল লিংক ও বছর
   var data = window.AH_DATA && window.AH_DATA.site ? window.AH_DATA.site : {};
   document.querySelectorAll('[data-site]').forEach(function (el) {
     var key = el.getAttribute('data-site');
@@ -30,11 +43,11 @@
       else { el.setAttribute('href', data[key]); el.setAttribute('target', '_blank'); }
     }
   });
-
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();
   });
 
+  // ৫. Supabase প্রোফাইল ডাটা
   if (window.supabaseClient) {
     supabaseClient.from('profile').select('*').eq('id', 1).single().then(({ data: profile, error }) => {
       if (!error && profile) {
@@ -60,9 +73,9 @@
     });
   }
 
-  // ৪. ইমেজ প্লেসহোল্ডার
+  // ৬. ইমেজ প্লেসহোল্ডার
   window.AH_placeholder = function (label) {
-    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e3a8a"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs><rect width="800" height="600" fill="url(#g)"/><text x="400" y="320" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="40" font-weight="bold">' + (label||'Design') + '</text></svg>';
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600"><rect width="800" height="600" fill="#1e3a8a"/><text x="400" y="320" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="40" font-weight="bold">' + (label||'Design') + '</text></svg>';
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   };
 })();
